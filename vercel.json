@@ -1,5 +1,11 @@
 {
     "name": "My Node.js API",
-    "version": "1.0.0",
-    "framework": "nodejs"
-  }
+    "version": 2,
+    "framework": "nodejs",
+    "builds": [
+        {
+            "src": "./index.js",
+            "use": "@vercel/node"
+        }
+    ]
+}
