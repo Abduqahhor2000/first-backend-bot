@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 
-const token = `6046857547:AAGaX_yZMWMgnV7MyPbItcrVD8KrKcAmhDk`; // for PRO
+const token = `6350959478:AAG0yBNidVsvQc45EmD2hMzk9fmTcur08rQ`; // for PRO
 
 const bot = new TelegramBot(token, { polling: true });
 const app = express();
