@@ -2,8 +2,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 
-// const token = `6624105736:AAFOQFX9lSLFuLA6tAfkyvlSvuwloJPCaYI`; // for DEV
-const token = `6028425145:AAEzrAI3nB9i6jMhz-8O_SCkNlhYrk8LLnk`; // for PRO
+
+const token = `6162603733:AAFwqim2qU-d6PMieEp924lU1vNptZooFLE`; // for PRO
 
 const bot = new TelegramBot(token, { polling: true });
 const app = express();
