@@ -1,6 +1,6 @@
 const TelegramBot = require("node-telegram-bot-api");
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
@@ -12,19 +12,37 @@ const token = `6624105736:AAFOQFX9lSLFuLA6tAfkyvlSvuwloJPCaYI`;
 const bot = new TelegramBot(token, { polling: true });
 
 bot.setMyCommands([
-	{ command: '/start', description: "Kurslar haqida ma'lumot" },
-	{ command: '/courses', description: 'Barcha kurslar' },
+  { command: "/start", description: "Kurslar haqida ma'lumot" },
+  { command: "/courses", description: "Barcha kurslar" },
 ]);
 
-const bootstrap = () => {
-  bot.on("message", async (msg) => {
-    const chatId = msg.chat.id;
-    const text = msg.text;
+bot.on("message", async (msg) => {
+  const chatId = msg.chat.id;
+  const text = msg.text;
 
-    if (text === "/start") {
-      return await bot.sendMessage(chatId, "Salom, Bu shunchaki bot hozircha!", {
+  if (text === "/start") {
+    return await bot.sendMessage(chatId, "Salom, Bu shunchaki bot hozircha!", {
+      reply_markup: {
+        keyboard: [
+          [
+            {
+              text: "Kurslarni ko'rish",
+              web_app: {
+                url: "https://first-web-bot.vercel.app",
+              },
+            },
+          ],
+        ],
+      },
+    });
+  }
+  if (text === "/courses") {
+    return await bot.sendMessage(
+      chatId,
+      "Saytga o'tib barcha kurslarni ko'rishingiz mumkin.",
+      {
         reply_markup: {
-          keyboard: [
+          inline_keyboard: [
             [
               {
                 text: "Kurslarni ko'rish",
@@ -35,82 +53,62 @@ const bootstrap = () => {
             ],
           ],
         },
-      });
-    }
-    if (text === "/courses") {
-      return await bot.sendMessage(chatId, "Saytga o'tib barcha kurslarni ko'rishingiz mumkin.", {
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "Kurslarni ko'rish",
-                web_app: {
-                  url: "https://first-web-bot.vercel.app",
-                },
-              },
-            ]
-          ]
-        },
-      });
-    }
-
-    if (msg.web_app_data?.data) {
-      try {
-        const data = JSON.parse(msg.web_app_data?.data);
-
-        await bot.sendMessage(
-          chatId,
-          "Bizga ishonch bildirganingiz uchun raxmat, siz sotib olgan kurslarni ro'yhati"
-        );
-
-        for (item of data) {
-          await bot.sendPhoto(chatId, item.Image);
-          await bot.sendMessage(chatId, `${item.title} - ${item.quantity}x`);
-        }
-
-        await bot.sendMessage(
-          chatId,
-          `Umumiy narx - ${data
-            .reduce((a, c) => a + c.price * c.quantity, 0)
-            .toLocaleString("en-US", {
-              style: "currency",
-              currency: "USD",
-            })}`
-        );
-      } catch (error) {
-        console.log(error);
       }
+    );
+  }
+
+  if (msg.web_app_data?.data) {
+    try {
+      const data = JSON.parse(msg.web_app_data?.data);
+
+      await bot.sendMessage(
+        chatId,
+        "Bizga ishonch bildirganingiz uchun raxmat, siz sotib olgan kurslarni ro'yhati"
+      );
+
+      for (item of data) {
+        await bot.sendPhoto(chatId, item.Image);
+        await bot.sendMessage(chatId, `${item.title} - ${item.quantity}x`);
+      }
+
+      await bot.sendMessage(
+        chatId,
+        `Umumiy narx - ${data
+          .reduce((a, c) => a + c.price * c.quantity, 0)
+          .toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          })}`
+      );
+    } catch (error) {
+      console.log(error);
     }
-  });
-};
-
-bootstrap();
-
-app.post('/web-data', async (req, res) => {
-	const { queryID, products } = req.body;
-
-	try {
-		await bot.answerWebAppQuery(queryID, {
-			type: 'article',
-			id: queryID,
-			title: 'Muvaffaqiyatli xarid qildingiz',
-			input_message_content: {
-				message_text: `Xaridingiz bilan tabriklayman, siz ${products
-					.reduce((a, c) => a + c.price * c.quantity, 0)
-					.toLocaleString('en-US', {
-						style: 'currency',
-						currency: 'USD',
-					})} qiymatga ega mahsulot sotib oldingiz, ${products
-					.map(c => `${c.title} ${c.quantity}X`)
-					.join(', ')}`,
-			},
-		});
-		return res.status(200).json({});
-	} catch (error) {
-		return res.status(500).json({});
-	}
+  }
 });
 
-app.listen(process.env.PORT || 8000, () =>
-	console.log('Server started')
-);
+app.post("/web-data", async (req, res) => {
+  const { queryID, products } = req.body;
+
+  try {
+    await bot.answerWebAppQuery(queryID, {
+      type: "article",
+      id: queryID,
+      title: "Muvaffaqiyatli xarid qildingiz",
+      input_message_content: {
+        message_text: `Xaridingiz bilan tabriklayman, siz ${products
+          .reduce((a, c) => a + c.price * c.quantity, 0)
+          .toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          })} qiymatga ega mahsulot sotib oldingiz, ${products
+          .map((c) => `${c.title} ${c.quantity}X`)
+          .join(", ")}`,
+      },
+    });
+    return res.status(200).json({});
+  } catch (error) {
+    return res.status(500).json({});
+  }
+});
+
+app.listen(process.env.PORT || 8000, () => console.log("Server started"));
