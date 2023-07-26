@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 
-const token = `6350959478:AAG0yBNidVsvQc45EmD2hMzk9fmTcur08rQ`; // for PRO
+const token = `6350959478:AAG0yBNidVsvQc45EmD2hMzk9fmTcur08rQ`;
 
 const bot = new TelegramBot(token, { polling: true });
 const app = express();
@@ -39,9 +39,7 @@ bot.on('message', async msg => {
 				},
 			}
 		);
-	}
-
-	if (text === '/courses') {
+	} else if (text === '/courses') {
 		await bot.sendMessage(
 			chatId,
 			"Saytga o'tib barcha kurslarni ko'rishingiz mumkin",
@@ -60,9 +58,7 @@ bot.on('message', async msg => {
 				},
 			}
 		);
-	}
-
-	if (msg.web_app_data?.data) {
+	} else if (msg.web_app_data?.data) {
 		try {
 			const data = JSON.parse(msg.web_app_data?.data);
 
