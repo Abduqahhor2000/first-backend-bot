@@ -7,7 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const token = `6624105736:AAFOQFX9lSLFuLA6tAfkyvlSvuwloJPCaYI`;
+// const token = `6624105736:AAFOQFX9lSLFuLA6tAfkyvlSvuwloJPCaYI`; // for DEV
+const token = `6028425145:AAEzrAI3nB9i6jMhz-8O_SCkNlhYrk8LLnk`; // for PRO
 
 const bot = new TelegramBot(token, { polling: true });
 
