@@ -1,7 +1,6 @@
 {
     "name": "My Node.js API",
     "version": 2,
-    "framework": "nodejs",
     "builds": [
         {
             "src": "./index.js",
